@@ -2,12 +2,14 @@
 import optparse
 import sys
 from collections import defaultdict
+import time
 
 optparser = optparse.OptionParser()
 optparser.add_option("-d", "--data", dest="train", default="data/hansards", help="Data filename prefix (default=data)")
 optparser.add_option("-e", "--english", dest="english", default="e", help="Suffix of English filename (default=e)")
 optparser.add_option("-f", "--french", dest="french", default="f", help="Suffix of French filename (default=f)")
-optparser.add_option("-t", "--threshold", dest="threshold", default=0.5, type="float", help="Threshold for aligning with Dice's coefficient (default=0.5)")
+optparser.add_option("-k", "--iteration", dest="iterations", default=10, help="Number of iterations (default=10")
+# optparser.add_option("-t", "--threshold", dest="threshold", default=0.5, type="float", help="Threshold for aligning with Dice's coefficient (default=0.5)")
 optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to use for training and alignment")
 (opts, _) = optparser.parse_args()
 f_data = "%s.%s" % (opts.train, opts.french)
@@ -30,9 +32,10 @@ for ff, ee in bitext:
 
 k = 0
 
-while k < 10:
+iterations = int(opts.iterations)
+start = time.time()
+while k < iterations:
     k += 1
-
     # Initilaize all the counts
     count_e = defaultdict(float)
     count_fe = defaultdict(float)
@@ -54,7 +57,6 @@ while k < 10:
         t[(f_i, e_j)] = count_fe[(f_i, e_j)] / count_e[e_j]
 
 
-
 # Get the alignments
 for ff, ee in bitext:
         for (i, f_i) in enumerate(ff):
@@ -67,4 +69,7 @@ for ff, ee in bitext:
             sys.stdout.write("%i-%i " % (i, best_j))
         sys.stdout.write("\n")
 
+end = time.time()
 
+
+sys.stderr.write("\n...Done. Time elapsed: %.2f" % (end - start) + "s\n")
