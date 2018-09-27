@@ -2,7 +2,7 @@
 import optparse
 import sys
 from collections import defaultdict
-from model1 import *
+from model2 import *
 from nltk.stem import SnowballStemmer
 import time
 
@@ -12,7 +12,7 @@ optparser.add_option("-e", "--english", dest="english", default="e", help="Suffi
 optparser.add_option("-f", "--french", dest="french", default="f", help="Suffix of French filename (default=f)")
 optparser.add_option("-k", "--iteration", dest="iterations", default=10, help="Number of iterations (default=10)")
 optparser.add_option("-s", "--stemming", dest="stemming", default=True, help="Word stemming (default=true)")
-optparser.add_option("-t", "--trainDirection", dest="trainDirection", default="e2f", help="Translation direction (default=e2f): e2f or f2e")
+optparser.add_option("-t", "--trainDirection", dest="trainDirection", default="f2e", help="Translation direction (default=f2e): e2f or f2e")
 # optparser.add_option("-t", "--threshold", dest="threshold", default=0.5, type="float", help="Threshold for aligning with Dice's coefficient (default=0.5)")
 optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to use for training and alignment")
 (opts, _) = optparser.parse_args()
@@ -38,8 +38,11 @@ start = time.time()
 
 
 if __name__ == "__main__":
-    sys.stderr.write("Training with EM algorithm...")
+    sys.stderr.write("Training with IBM Model2 and EM algorithm...")
     start = time.time()
-    align(bitext, opts)
+    if (opts.trainDirection == "f2e"):
+        model2_train_f2e(bitext, opts)
+    else:
+        model2_train_e2f(bitext, opts)
     end = time.time()
     sys.stderr.write("\n...Done. Time elapsed: %.2f" % (end - start) + "s\n")
