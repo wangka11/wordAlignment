@@ -109,3 +109,7 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# file: ~/.gitignore_global
+.DS_Store
+.idea
