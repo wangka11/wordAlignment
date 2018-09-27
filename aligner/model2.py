@@ -20,7 +20,8 @@ e_data = "%s.%s" % (opts.train, opts.english)
 sys.stderr.write("Training with IBM2 and EM algorithm...")
 bitext = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_sents]]
 
-if opts.stemming:
+stemming = False if str(opts.stemming).lower() == "false" else True
+if stemming:
     stemmer_fr = SnowballStemmer("french")
     stemmer_en = SnowballStemmer("english")
 
@@ -28,7 +29,7 @@ if opts.stemming:
     for ff, ee in bitext:
 
         stemmed_text.append([[stemmer_fr.stem(item.decode("utf-8")) for item in ff],
-                                [stemmer_en.stem(item) for item in ee]])
+                                [stemmer_en.stem(item.decode("utf-8")) for item in ee]])
     bitext = stemmed_text
 
 start = time.time()

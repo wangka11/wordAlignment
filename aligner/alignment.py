@@ -31,7 +31,7 @@ if stemming:
     for ff, ee in bitext:
 
         stemmed_text.append([[stemmer_fr.stem(item.decode("utf-8")) for item in ff],
-                                [stemmer_en.stem(item) for item in ee]])
+                                [stemmer_en.stem(item.decode("utf-8")) for item in ee]])
     bitext = stemmed_text
 
 start = time.time()
